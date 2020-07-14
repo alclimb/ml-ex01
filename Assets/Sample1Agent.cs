@@ -16,6 +16,9 @@ public class Sample1Agent : Agent
     [Header("基準になるステージ")]
     public Transform StageTransform;
 
+    [Header("ステータス表示用テキスト")]
+    public UnityEngine.UI.Text StatusText;
+
     public override void Initialize()
     {
         Debug.Log("Initialize");
@@ -56,8 +59,11 @@ public class Sample1Agent : Agent
         {
             Debug.Log($"OnActionReceived >> クリア！");
 
+            // UI更新
+            this.StatusText.text = "クリア";
+
             // 評価: 報酬を与える
-            base.SetReward(10.0f);
+            base.SetReward(1.0f);
 
             // リセットして次のエピソードを開始
             base.EndEpisode();
@@ -69,6 +75,9 @@ public class Sample1Agent : Agent
         if (this.transform.position.y < -1.0f)
         {
             Debug.Log($"OnActionReceived >> 落下");
+
+            // UI更新
+            this.StatusText.text = "落下";
 
             // 評価: 報酬を減らす
             base.SetReward(-1f);
