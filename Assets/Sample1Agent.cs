@@ -17,7 +17,7 @@ public class Sample1Agent : Agent
     public Transform StageTransform;
 
     [Header("ステータス表示用テキスト")]
-    public UnityEngine.UI.Text StatusText;
+    public UnityEngine.TextMesh StatusText;
 
     public override void Initialize()
     {
@@ -34,13 +34,20 @@ public class Sample1Agent : Agent
         // Debug.Log($"CollectObservations >>");
 
         // ターゲットの位置 (ボールからの相対位置)
-        sensor.AddObservation(this.Target.position - this.transform.position);
+        var targetPosition = this.Target.position - this.transform.position;
 
         // ボールの位置 (ステージからの相対位置)
-        sensor.AddObservation(base.transform.position - this.StageTransform.position);
+        var ballPosition = base.transform.position - this.StageTransform.position;
 
         // ボールの速度
-        sensor.AddObservation(this._rigidbody.velocity);
+        var ballVelocity = this._rigidbody.velocity;
+
+        sensor.AddObservation(targetPosition.x);
+        sensor.AddObservation(targetPosition.z);
+        sensor.AddObservation(ballPosition.x);
+        sensor.AddObservation(ballPosition.z);
+        sensor.AddObservation(ballVelocity.x);
+        sensor.AddObservation(ballVelocity.z);
     }
 
     public override void OnActionReceived(float[] vectorAction)
