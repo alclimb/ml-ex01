@@ -58,44 +58,62 @@ public class Sample1Agent : Agent
         var actionX = Mathf.Clamp(vectorAction[0], -1f, 1f) * power;
         var actionZ = Mathf.Clamp(vectorAction[1], -1f, 1f) * power;
 
-        // 
+        // 移動
         this._rigidbody.AddForce(new Vector3(actionX, 0, actionZ));
 
-        if (Mathf.Abs(base.transform.position.x - this.Target.position.x) < 0.5f ||
-            Mathf.Abs(base.transform.position.z - this.Target.position.z) < 0.5f)
+        // ターゲットの位置 (ボールからの相対位置)
+        var targetPosition = this.Target.position - this.transform.position;
+
+        if ((0 < targetPosition.x && 0 < this._rigidbody.velocity.x) ||
+            (targetPosition.x < 0 && this._rigidbody.velocity.x < 0))
         {
-            Debug.Log($"OnActionReceived >> クリア！");
-
-            // UI更新
-            this.StatusText.text = "クリア";
-
             // 評価: 報酬を与える
-            base.SetReward(1.0f);
+            base.AddReward(+0.01f);
+        }
+        else
+        {
+            // 評価: 報酬を減らす
+            base.AddReward(-0.01f);
+        }
 
-            // リセットして次のエピソードを開始
-            base.EndEpisode();
-
-            return;
+        if ((0 < targetPosition.z && 0 < this._rigidbody.velocity.z) ||
+            (targetPosition.z < 0 && this._rigidbody.velocity.z < 0))
+        {
+            // 評価: 報酬を与える
+            base.AddReward(+0.01f);
+        }
+        else
+        {
+            // 評価: 報酬を減らす
+            base.AddReward(-0.01f);
         }
 
         // 落下判定
         if (this.transform.position.y < -1.0f)
         {
-            Debug.Log($"OnActionReceived >> 落下");
-
             // UI更新
             this.StatusText.text = "落下";
 
             // 評価: 報酬を減らす
-            base.SetReward(-1f);
+            base.AddReward(-1f);
 
             // リセットして次のエピソードを開始
             base.EndEpisode();
         }
-        else
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("MY_TARGET"))
         {
+            // UI更新
+            this.StatusText.text = "クリア";
+
             // 評価: 報酬を与える
-            // base.SetReward(0.01f);
+            base.AddReward(1.0f);
+
+            // リセットして次のエピソードを開始
+            base.EndEpisode();
         }
     }
 

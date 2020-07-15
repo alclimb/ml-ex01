@@ -141,7 +141,7 @@ GameObject:
   - component: {fileID: 7359586992609005373}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: MY_TARGET
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -446,7 +446,7 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 1
   m_Model: {fileID: 5022602860645237092, guid: a2f8cacb842c4e84ba93e38074652086, type: 3}
-  m_InferenceDevice: 1
+  m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: BallBehavior
   TeamId: 0
